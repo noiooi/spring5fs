@@ -18,7 +18,7 @@ public class MemberRegisterService {
 		}
 		
 		Member newMember = new Member(req.getEmail(), req.getPassword(), req.getName(), LocalDateTime.now());
-		memberDao.insert(member);
-		return member.getId();
+		memberDao.insert(newMember);
+		return newMember.getId();
 	}
 }
