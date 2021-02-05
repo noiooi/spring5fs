@@ -11,12 +11,15 @@ import spring.MemberListPrinter;
 import spring.MemberNotFoundException;
 import spring.MemberRegisterService;
 import spring.RegisterRequest;
+import spring.VersionPrinter;
 import spring.WrongIdPasswordException;
 
 /* 스프링 컨테이너 */
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import config.AppCtx;
+import config.AppConf1;
+import config.AppConf2;
 
 public class MainForSpring {
 
@@ -24,7 +27,9 @@ public class MainForSpring {
 	
 	public static void main(String[] args) throws IOException {
 		// 스프링 컨테이너 생성, 설정파일 정보를 통해 객체를 생성하고 의존 객체를 주입
-		ctx = new AnnotationConfigApplicationContext(AppCtx.class);
+		// ctx = new AnnotationConfigApplicationContext(AppCtx.class);
+		// 두 개 이상의 설정파일 정보 사용
+		ctx = new AnnotationConfigApplicationContext(AppConf1.class, AppConf2.class);
 		
 		BufferedReader reader = new BufferedReader(new InputStreamReader(System.in)); // System.in을 이용한 콘솔 입력
 		
@@ -47,6 +52,9 @@ public class MainForSpring {
 				continue;
 			} else if(command.startsWith("info ")) {
 				processInfoCommand(command.split(" "));
+				continue;
+			} else if(command.equals("version")) {
+				processVersionCommand();
 				continue;
 			}
 			printHelp();
@@ -105,6 +113,12 @@ public class MainForSpring {
 		listPrinter.printAll();
 	}
 	
+	// 버전 확인
+	private static void processVersionCommand() {
+		VersionPrinter versionPrinter = ctx.getBean("versionPrinter", VersionPrinter.class);
+		versionPrinter.print();
+	}
+	
 	// 회원 정보 확인
 	private static void processInfoCommand(String[] arg) {
 		if(arg.length !=2) {
@@ -124,6 +138,7 @@ public class MainForSpring {
 		System.out.println("change 이메일 현재비번 변경비번");
 		System.out.println("list");
 		System.out.println("info 이메일");
+		System.out.println("version");
 		System.out.println();
 		
 	}
